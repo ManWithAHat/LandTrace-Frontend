@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "LandTrace",
+    "slug": "landtrace-frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#1a3c2b"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1a3c2b"
+      }
+    }
+  }
+}
