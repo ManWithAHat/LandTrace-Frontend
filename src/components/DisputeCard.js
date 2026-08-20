@@ -11,14 +11,16 @@ const STATUS_COLORS = {
 
 /**
  * The list endpoint doesn't say which side is "me" — only names/phone/village
- * for farmer_a and farmer_b. We work it out by matching my own phone number
- * (from ProfileContext) against farmer_a_phone.
+ * for farmer_a and farmer_b, no farmer_a_id/farmer_b_id. We work out which
+ * side is mine by checking whether trace_a_id is one of my own trace IDs
+ * (from GET /traces) rather than matching phone strings, which sidesteps
+ * any formatting mismatch between how a phone is stored vs. displayed.
  */
-export default function DisputeCard({ conflict, myPhone, onPress }) {
+export default function DisputeCard({ conflict, myTraceIds, onPress }) {
   const { t } = useLanguage();
   const colors = STATUS_COLORS[conflict.status] ?? STATUS_COLORS.open;
 
-  const isA = conflict.farmer_a_phone === myPhone;
+  const isA = myTraceIds?.has(conflict.trace_a_id) ?? false;
   const otherName = isA ? conflict.farmer_b_name : conflict.farmer_a_name;
   const otherVillage = isA ? conflict.farmer_b_village : conflict.farmer_a_village;
   const myPct = isA ? conflict.overlap_pct_a : conflict.overlap_pct_b;

@@ -2,8 +2,8 @@ import React, { useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useLanguage } from '../i18n/LanguageContext';
-import { useProfile } from '../state/ProfileContext';
 import { listConflicts } from '../api/conflicts';
+import { listTraces } from '../api/traces';
 import LanguageToggle from '../components/LanguageToggle';
 import DisputeCard from '../components/DisputeCard';
 
@@ -11,25 +11,24 @@ const STATUSES = ['all', 'open', 'resolved', 'dismissed'];
 
 export default function DisputesListScreen({ navigation }) {
   const { t } = useLanguage();
-  const { profile } = useProfile();
   const [status, setStatus] = useState('open');
   const [conflicts, setConflicts] = useState([]);
+  const [myTraceIds, setMyTraceIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async (s) => {
     setLoading(true);
     try {
-      if (s === 'all') {
-        const [open, resolved, dismissed] = await Promise.all([
-          listConflicts('open'),
-          listConflicts('resolved'),
-          listConflicts('dismissed'),
-        ]);
-        setConflicts([...open.conflicts, ...resolved.conflicts, ...dismissed.conflicts]);
-      } else {
-        const res = await listConflicts(s);
-        setConflicts(res.conflicts);
-      }
+      const conflictsPromise =
+        s === 'all'
+          ? Promise.all([listConflicts('open'), listConflicts('resolved'), listConflicts('dismissed')]).then(
+              ([open, resolved, dismissed]) => [...open.conflicts, ...resolved.conflicts, ...dismissed.conflicts]
+            )
+          : listConflicts(s).then((res) => res.conflicts);
+
+      const [conflictsList, tracesRes] = await Promise.all([conflictsPromise, listTraces(100)]);
+      setConflicts(conflictsList);
+      setMyTraceIds(new Set(tracesRes.traces.map((tr) => tr.id)));
     } catch (err) {
       console.error('load conflicts failed:', err);
     } finally {
@@ -69,7 +68,7 @@ export default function DisputesListScreen({ navigation }) {
         renderItem={({ item }) => (
           <DisputeCard
             conflict={item}
-            myPhone={profile?.phone}
+            myTraceIds={myTraceIds}
             onPress={() => navigation.navigate('DisputeDetail', { conflictId: item.id })}
           />
         )}
