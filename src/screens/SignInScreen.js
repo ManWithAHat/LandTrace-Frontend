@@ -12,7 +12,6 @@ import {
 import { useLanguage } from '../i18n/LanguageContext';
 import { requestOtp } from '../api/auth';
 import { ApiError } from '../api/client';
-import LanguageToggle from '../components/LanguageToggle';
 import Logo from '../components/Logo';
 
 export default function SignInScreen({ navigation }) {
@@ -37,7 +36,6 @@ export default function SignInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <LanguageToggle style={styles.langToggle} />
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.content}>
         <View style={styles.top}>
           <Logo size={56} />
@@ -78,7 +76,6 @@ export default function SignInScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#f1f1ef' },
-  langToggle: { position: 'absolute', top: 16, right: 16, zIndex: 1 },
   content: { flex: 1, justifyContent: 'space-between', paddingHorizontal: 24, paddingBottom: 32 },
   top: { alignItems: 'center', marginTop: 96 },
   appName: { fontSize: 24, fontWeight: '700', color: '#1a1a1a', marginTop: 12 },

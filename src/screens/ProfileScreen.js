@@ -4,6 +4,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAuth } from '../auth/AuthContext';
 import { useProfile } from '../state/ProfileContext';
 import { getTokens, ApiError } from '../api/client';
+import LanguagePicker from '../components/LanguagePicker';
 
 export default function ProfileScreen() {
   const { t } = useLanguage();
@@ -72,6 +73,9 @@ export default function ProfileScreen() {
         <TouchableOpacity style={styles.saveButton} onPress={onSave} disabled={saving}>
           <Text style={styles.saveText}>{saving ? '...' : t('save')}</Text>
         </TouchableOpacity>
+
+        <Text style={styles.label}>{t('language')}</Text>
+        <LanguagePicker />
 
         <TouchableOpacity style={styles.logoutButton} onPress={onLogout}>
           <Text style={styles.logoutText}>{t('logout')}</Text>

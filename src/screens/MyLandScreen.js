@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useLanguage } from '../i18n/LanguageContext';
 import { listTraces } from '../api/traces';
 import { listConflicts } from '../api/conflicts';
-import LanguageToggle from '../components/LanguageToggle';
 import Avatar from '../components/Avatar';
 import TraceCard from '../components/TraceCard';
 
@@ -54,12 +53,9 @@ export default function MyLandScreen({ navigation }) {
             {traces.length} {t('fieldsProtected')}
           </Text>
         </View>
-        <View style={styles.headerRight}>
-          <LanguageToggle />
-          <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-            <Avatar />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+          <Avatar />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.tabRow}>
@@ -83,9 +79,16 @@ export default function MyLandScreen({ navigation }) {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          renderItem={({ item }) => (
-            <TraceCard trace={item} hasConflict={conflictedTraceIds.has(item.id)} />
-          )}
+          renderItem={({ item }) => {
+            const hasConflict = conflictedTraceIds.has(item.id);
+            return (
+              <TraceCard
+                trace={item}
+                hasConflict={hasConflict}
+                onPress={() => navigation.navigate('TraceDetail', { traceId: item.id, hasConflict })}
+              />
+            );
+          }}
           ListEmptyComponent={!loading ? <Text style={styles.empty}>{t('noTracesYet')}</Text> : null}
         />
       ) : (
@@ -109,7 +112,6 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 20, fontWeight: '700', color: '#1a1a1a' },
   subtitle: { fontSize: 12, color: '#6b6b6b', marginTop: 2 },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   tabRow: {
     flexDirection: 'row',
     marginHorizontal: 20,

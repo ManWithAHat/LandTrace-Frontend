@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sqmToAcres, formatDate } from '../utils/format';
 
-export default function TraceCard({ trace, hasConflict }) {
+export default function TraceCard({ trace, hasConflict, onPress }) {
   const { t } = useLanguage();
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.row}>
         <Text style={styles.label}>{trace.label ?? trace.local_id}</Text>
         <View style={[styles.badge, hasConflict ? styles.badgeConflict : styles.badgeClear]}>
@@ -23,7 +23,7 @@ export default function TraceCard({ trace, hasConflict }) {
       <Text style={styles.date}>
         {t('uploaded')} {formatDate(trace.created_at)}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

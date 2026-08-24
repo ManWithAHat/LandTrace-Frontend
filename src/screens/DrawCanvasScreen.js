@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Modal,
   Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Polyline, Circle } from 'react-native-svg';
 import { useLanguage } from '../i18n/LanguageContext';
 import { computePolygonStats } from '../utils/calculations';
@@ -44,6 +45,19 @@ export default function DrawCanvasScreen({ navigation }) {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [fieldName, setFieldName] = useState('');
   const [error, setError] = useState(null);
+
+  // React Navigation keeps this screen mounted in the Draw tab's stack, so
+  // without this the canvas would still show the previous trace's points
+  // the next time you navigate back into it. Reset on every focus instead.
+  useFocusEffect(
+    useCallback(() => {
+      setScreenPoints([]);
+      setGeoPoints([]);
+      setFieldName('');
+      setError(null);
+      setShowSaveModal(false);
+    }, [])
+  );
 
   const stats = computePolygonStats(geoPoints);
 

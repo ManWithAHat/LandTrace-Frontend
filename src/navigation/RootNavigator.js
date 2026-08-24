@@ -7,6 +7,7 @@ import { useProfile } from '../state/ProfileContext';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
 import DisputeDetailScreen from '../screens/DisputeDetailScreen';
+import TraceDetailScreen from '../screens/TraceDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Stack = createStackNavigator();
@@ -42,6 +43,16 @@ export default function RootNavigator() {
             options={{
               headerShown: true,
               title: 'Boundary Dispute',
+              headerStyle: { backgroundColor: '#1a3c2b' },
+              headerTintColor: '#fff',
+            }}
+          />
+          <Stack.Screen
+            name="TraceDetail"
+            component={TraceDetailScreen}
+            options={{
+              headerShown: true,
+              title: 'Field Details',
               headerStyle: { backgroundColor: '#1a3c2b' },
               headerTintColor: '#fff',
             }}

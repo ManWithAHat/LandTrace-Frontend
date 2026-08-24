@@ -4,7 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useLanguage } from '../i18n/LanguageContext';
 import { listConflicts } from '../api/conflicts';
 import { listTraces } from '../api/traces';
-import LanguageToggle from '../components/LanguageToggle';
 import DisputeCard from '../components/DisputeCard';
 
 const STATUSES = ['all', 'open', 'resolved', 'dismissed'];
@@ -13,7 +12,7 @@ export default function DisputesListScreen({ navigation }) {
   const { t } = useLanguage();
   const [status, setStatus] = useState('open');
   const [conflicts, setConflicts] = useState([]);
-  const [myTraceIds, setMyTraceIds] = useState(new Set());
+  const [myTraces, setMyTraces] = useState(new Map());
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async (s) => {
@@ -28,7 +27,7 @@ export default function DisputesListScreen({ navigation }) {
 
       const [conflictsList, tracesRes] = await Promise.all([conflictsPromise, listTraces(100)]);
       setConflicts(conflictsList);
-      setMyTraceIds(new Set(tracesRes.traces.map((tr) => tr.id)));
+      setMyTraces(new Map(tracesRes.traces.map((tr) => [tr.id, tr])));
     } catch (err) {
       console.error('load conflicts failed:', err);
     } finally {
@@ -46,7 +45,6 @@ export default function DisputesListScreen({ navigation }) {
     <SafeAreaView style={styles.screen}>
       <View style={styles.header}>
         <Text style={styles.title}>{t('boundaryDisputes')}</Text>
-        <LanguageToggle />
       </View>
 
       <View style={styles.filterRow}>
@@ -68,7 +66,7 @@ export default function DisputesListScreen({ navigation }) {
         renderItem={({ item }) => (
           <DisputeCard
             conflict={item}
-            myTraceIds={myTraceIds}
+            myTraces={myTraces}
             onPress={() => navigation.navigate('DisputeDetail', { conflictId: item.id })}
           />
         )}

@@ -1,14 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { useLanguage } from '../i18n/LanguageContext';
-import LanguageToggle from '../components/LanguageToggle';
 
 export default function DrawIntroScreen({ navigation }) {
   const { t } = useLanguage();
 
   return (
     <SafeAreaView style={styles.screen}>
-      <LanguageToggle style={styles.langToggle} />
       <View style={styles.center}>
         <View style={styles.pin}>
           <Text style={styles.pinGlyph}>📍</Text>
@@ -25,7 +23,6 @@ export default function DrawIntroScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#f1f1ef' },
-  langToggle: { position: 'absolute', top: 16, right: 16, zIndex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
   pin: {
     width: 56,

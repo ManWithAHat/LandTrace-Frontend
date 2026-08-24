@@ -4,7 +4,6 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useAuth } from '../auth/AuthContext';
 import { requestOtp } from '../api/auth';
 import { ApiError } from '../api/client';
-import LanguageToggle from '../components/LanguageToggle';
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 30;
@@ -65,7 +64,6 @@ export default function VerifyOtpScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.screen}>
-      <LanguageToggle style={styles.langToggle} />
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backText}>‹</Text>
       </TouchableOpacity>
@@ -114,7 +112,6 @@ export default function VerifyOtpScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#f1f1ef' },
-  langToggle: { position: 'absolute', top: 16, right: 16, zIndex: 1 },
   backButton: { position: 'absolute', top: 16, left: 16, zIndex: 1, padding: 8 },
   backText: { fontSize: 28, color: '#1a1a1a' },
   content: { flex: 1, justifyContent: 'center', paddingHorizontal: 24 },
