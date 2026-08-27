@@ -6,7 +6,7 @@ const LanguageContext = createContext(null);
 const LANG_STORAGE_KEY = 'landtrace_lang';
 
 export function LanguageProvider({ children }) {
-  const [lang, setLangState] = useState('en');
+  const [lang, setLangState] = useState('hi');
 
   useEffect(() => {
     AsyncStorage.getItem(LANG_STORAGE_KEY)
