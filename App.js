@@ -5,6 +5,7 @@ import { LanguageProvider } from './src/i18n/LanguageContext';
 import { AuthProvider } from './src/auth/AuthContext';
 import { ProfileProvider } from './src/state/ProfileContext';
 import RootNavigator from './src/navigation/RootNavigator';
+import './src/tasks/locationTask'; // registers the background location task before any screen mounts
 
 export default function App() {
   return (

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -12,11 +12,13 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import MapView, { Polygon } from 'react-native-maps';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useProfile } from '../state/ProfileContext';
 import { getConflict, addConflictNote, updateConflictStatus } from '../api/conflicts';
 import { ApiError } from '../api/client';
 import { sqmToAcres } from '../utils/format';
+import { ringToLatLngs, regionForRings } from '../utils/geo';
 
 export default function DisputeDetailScreen({ route }) {
   const { conflictId } = route.params;
@@ -43,6 +45,11 @@ export default function DisputeDetailScreen({ route }) {
     load();
   }, [load]);
 
+  const ringA = conflict?.trace_a_geometry?.coordinates?.[0];
+  const ringB = conflict?.trace_b_geometry?.coordinates?.[0];
+  const overlapRing = conflict?.overlap_geometry?.coordinates?.[0];
+  const mapRegion = useMemo(() => (ringA && ringB ? regionForRings([ringA, ringB]) : null), [ringA, ringB]);
+
   if (loading || !conflict) {
     return (
       <SafeAreaView style={styles.screen}>
@@ -58,6 +65,8 @@ export default function DisputeDetailScreen({ route }) {
   const theirs = isA
     ? { label: conflict.trace_b_label, area: conflict.trace_b_area_sqm, pct: conflict.overlap_pct_b }
     : { label: conflict.trace_a_label, area: conflict.trace_a_area_sqm, pct: conflict.overlap_pct_a };
+  const myRing = isA ? ringA : ringB;
+  const theirRing = isA ? ringB : ringA;
 
   const onPostNote = async () => {
     if (!noteText.trim()) return;
@@ -115,9 +124,62 @@ export default function DisputeDetailScreen({ route }) {
             </Text>
           </View>
 
-          <View style={styles.mapPlaceholder}>
-            <Text style={styles.mapPlaceholderText}>{t('disputeMapComingSoon')}</Text>
-          </View>
+          {mapRegion ? (
+            <View style={styles.mapContainer}>
+              <MapView
+                style={styles.map}
+                mapType="hybrid"
+                region={mapRegion}
+                scrollEnabled={false}
+                zoomEnabled={false}
+                rotateEnabled={false}
+                pitchEnabled={false}
+              >
+                {myRing && (
+                  <Polygon
+                    coordinates={ringToLatLngs(myRing)}
+                    fillColor="rgba(74, 222, 128, 0.2)"
+                    strokeColor="#16a34a"
+                    strokeWidth={2.5}
+                  />
+                )}
+                {theirRing && (
+                  <Polygon
+                    coordinates={ringToLatLngs(theirRing)}
+                    fillColor="rgba(96, 165, 250, 0.2)"
+                    strokeColor="#2563eb"
+                    strokeWidth={2.5}
+                  />
+                )}
+                {overlapRing && (
+                  <Polygon
+                    coordinates={ringToLatLngs(overlapRing)}
+                    fillColor="rgba(239, 68, 68, 0.45)"
+                    strokeColor="#dc2626"
+                    strokeWidth={1.5}
+                  />
+                )}
+              </MapView>
+              <View style={styles.mapLegend}>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendSwatch, { backgroundColor: '#16a34a' }]} />
+                  <Text style={styles.legendText}>{t('yourField')}</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendSwatch, { backgroundColor: '#2563eb' }]} />
+                  <Text style={styles.legendText}>{t('theirField')}</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendSwatch, { backgroundColor: '#dc2626' }]} />
+                  <Text style={styles.legendText}>{t('overlap')}</Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.mapPlaceholder}>
+              <Text style={styles.mapPlaceholderText}>{t('disputeMapComingSoon')}</Text>
+            </View>
+          )}
 
           <Text style={styles.notesTitle}>{t('notes')}</Text>
           {conflict.notes.map((n) => {
@@ -184,6 +246,22 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   mapPlaceholderText: { fontSize: 12, color: '#9a9a94' },
+  mapContainer: { height: 200, borderRadius: 10, overflow: 'hidden', marginBottom: 20 },
+  map: { flex: 1 },
+  mapLegend: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+    right: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 8,
+    paddingVertical: 6,
+  },
+  legendItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  legendSwatch: { width: 9, height: 9, borderRadius: 2 },
+  legendText: { fontSize: 11, color: '#1a1a1a', fontWeight: '600' },
   notesTitle: { fontSize: 13, fontWeight: '700', color: '#1a1a1a', marginBottom: 10 },
   noteBubble: {
     backgroundColor: '#fff',

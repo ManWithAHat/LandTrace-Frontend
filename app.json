@@ -10,12 +10,36 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.landtrace.app",
+      "infoPlist": {
+        "UIBackgroundModes": ["location"]
+      }
     },
     "android": {
+      "package": "com.landtrace.app",
       "adaptiveIcon": {
         "backgroundColor": "#1a3c2b"
-      }
-    }
+      },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ]
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "LandTrace uses your location to trace field boundaries, including while the app is in the background so tracing continues if your screen turns off.",
+          "locationAlwaysPermission": "LandTrace uses your location to keep tracing a field boundary while the app is in the background.",
+          "locationWhenInUsePermission": "LandTrace uses your location to trace field boundaries.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
+    ]
   }
 }

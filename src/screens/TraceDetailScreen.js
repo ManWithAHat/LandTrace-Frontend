@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import MapView, { Polygon } from 'react-native-maps';
 import { useLanguage } from '../i18n/LanguageContext';
 import { getTrace, deleteTrace } from '../api/traces';
 import { ApiError } from '../api/client';
 import { sqmToAcres, formatDate } from '../utils/format';
+import { ringToLatLngs, regionForRings } from '../utils/geo';
 
 export default function TraceDetailScreen({ route, navigation }) {
   const { traceId, hasConflict } = route.params;
@@ -29,6 +31,10 @@ export default function TraceDetailScreen({ route, navigation }) {
       load();
     }, [load])
   );
+
+  const ring = trace?.geometry?.coordinates?.[0];
+  const mapCoords = useMemo(() => (ring ? ringToLatLngs(ring) : []), [ring]);
+  const region = useMemo(() => (ring ? regionForRings([ring]) : null), [ring]);
 
   const onDelete = () => {
     Alert.alert(t('deleteFieldConfirmTitle'), t('deleteFieldConfirmBody'), [
@@ -60,6 +66,22 @@ export default function TraceDetailScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.screen}>
+      {region && (
+        <View style={styles.mapContainer}>
+          <MapView
+            style={styles.map}
+            mapType="hybrid"
+            region={region}
+            scrollEnabled={false}
+            zoomEnabled={false}
+            rotateEnabled={false}
+            pitchEnabled={false}
+          >
+            <Polygon coordinates={mapCoords} fillColor="rgba(74, 222, 128, 0.3)" strokeColor="#16a34a" strokeWidth={3} />
+          </MapView>
+        </View>
+      )}
+
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>{trace.label ?? trace.local_id}</Text>
@@ -100,6 +122,8 @@ export default function TraceDetailScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#f1f1ef' },
+  mapContainer: { height: 260, borderBottomWidth: 1, borderBottomColor: '#ececeb' },
+  map: { flex: 1 },
   content: { padding: 20 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
   title: { fontSize: 20, fontWeight: '700', color: '#1a1a1a', flexShrink: 1, marginRight: 12 },
