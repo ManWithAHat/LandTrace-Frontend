@@ -4,6 +4,7 @@
     "slug": "landtrace-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
+    "newArchEnabled": false,
     "userInterfaceStyle": "light",
     "splash": {
       "backgroundColor": "#1a3c2b"
