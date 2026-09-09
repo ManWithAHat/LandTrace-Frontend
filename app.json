@@ -29,7 +29,12 @@
         "FOREGROUND_SERVICE",
         "FOREGROUND_SERVICE_LOCATION",
         "POST_NOTIFICATIONS"
-      ]
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDSMV6MmqW0sCdA-f-EdsPvDA8-TGoXOUQ"
+        }
+      }
     },
     "plugins": [
       [
