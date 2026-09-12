@@ -68,6 +68,7 @@ export default function SignInScreen({ navigation }) {
               keyboardType="number-pad"
               maxLength={country.length}
               placeholder={country.length === 8 ? '81234567' : '9876543210'}
+              placeholderTextColor="#9a9a94"
             />
           </View>
           <Modal visible={pickerVisible} transparent animationType="fade" onRequestClose={() => setPickerVisible(false)}>

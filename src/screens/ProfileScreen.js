@@ -53,7 +53,13 @@ export default function ProfileScreen() {
         <Text style={styles.phone}>{profile?.phone}</Text>
 
         <Text style={styles.label}>{t('fullName')}</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} placeholder={t('fullName')} />
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder={t('fullName')}
+          placeholderTextColor="#9a9a94"
+        />
 
         {/*
           The design's "Home address" field doesn't have a matching backend
@@ -67,6 +73,7 @@ export default function ProfileScreen() {
           value={village}
           onChangeText={setVillage}
           placeholder={t('homeAddress')}
+          placeholderTextColor="#9a9a94"
           multiline
         />
 

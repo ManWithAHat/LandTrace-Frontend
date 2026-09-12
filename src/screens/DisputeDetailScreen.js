@@ -213,6 +213,7 @@ export default function DisputeDetailScreen({ route }) {
               value={noteText}
               onChangeText={setNoteText}
               placeholder={t('writeNote')}
+              placeholderTextColor="#9a9a94"
             />
             <TouchableOpacity style={styles.sendButton} onPress={onPostNote} disabled={posting || !noteText.trim()}>
               <Text style={styles.sendText}>➤</Text>

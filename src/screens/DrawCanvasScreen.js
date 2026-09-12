@@ -359,6 +359,7 @@ export default function DrawCanvasScreen({ navigation }) {
               value={fieldName}
               onChangeText={setFieldName}
               placeholder={t('fieldName')}
+              placeholderTextColor="#9a9a94"
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
             <View style={styles.modalActions}>
