@@ -292,7 +292,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  noteInput: { flex: 1, borderWidth: 1, borderColor: '#d8d8d4', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 10, fontSize: 14 },
+  noteInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#d8d8d4',
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#1a1a1a',
+    backgroundColor: '#fff',
+  },
   sendButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#1a3c2b', alignItems: 'center', justifyContent: 'center' },
   sendText: { color: '#fff', fontSize: 16 },
 });

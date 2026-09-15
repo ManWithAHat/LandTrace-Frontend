@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     paddingHorizontal: 12,
     fontSize: 15,
+    color: '#1a1a1a',
     backgroundColor: '#fff',
   },
   errorText: { color: '#b3261e', fontSize: 13, marginBottom: 8 },

@@ -435,6 +435,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 15,
+    color: '#1a1a1a',
+    backgroundColor: '#fff',
     marginBottom: 10,
   },
   errorText: { color: '#b3261e', fontSize: 12, marginBottom: 8 },
